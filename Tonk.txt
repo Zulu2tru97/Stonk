@@ -1,2 +1,19 @@
 yooooooooooooooooooo 
 Shaka tonk game
+assets/PlayingCards/
+
+
+
+        filePath := strings.join([]string{"assets/PlayingCards ", rank_to_str(c.rank), suit_to_str(c.suit), ".png"}, "");
+ dsds
+        // allocate a temporary u8 buffer, copy bytes and add a NUL terminator
+        buf, _ := runtime.make_slice([]u8, len(filePath) + 1);
+        for i := 0; i < len(filePath); i += 1 
+        {
+            buf[i] = cast(u8)filePath[i];
+        }
+        buf[len(filePath)] = 0;
+        cstr := cast(cstring)(&buf[0]);
+        c.face = rl.LoadTexture(cstr);
+
+          "assets/PlayingCards/PNG/"
