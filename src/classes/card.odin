@@ -2,6 +2,7 @@ package classes
 import  fmt "core:fmt"
 import  "core:strings"
 import  runtime "base:runtime"
+import "core:math/rand"
 
 Rank:: enum 
 {
@@ -100,6 +101,7 @@ JokerDeck :: struct
 {
     d : Deck,
     cards: [54]Card,
+
 }
 
 initDeck :: proc() -> Deck 
@@ -122,7 +124,8 @@ initDeck :: proc() -> Deck
 
 initJokerDeck :: proc() -> JokerDeck 
 {
-    d: JokerDeck.d = initDeck();
+    d : JokerDeck;
+    d.d = initDeck();
     // Add two jokers
     d.cards[52].rank = Rank.Ace;  // Arbitrary rank for joker
     d.cards[52].suit = Suit.Spades; // Arbitrary suit for joker
@@ -132,7 +135,7 @@ initJokerDeck :: proc() -> JokerDeck
     d.cards[53].suit = Suit.Hearts; // Arbitrary suit for joker
     setJokerCardFace(&d.cards[53], 2); // 2 for black joker
     
-    d.top = 0;
+    d.d.top = 0;
     return d;
 }
 
@@ -158,23 +161,32 @@ Hand :: struct
     cards: [dynamic]Card,
 }
 
-addCardToHand :: proc(h: ^Hand, c: Card) 
+addCardToHand :: proc(h: ^[dynamic]Card, c: Card) 
 {
-    append(&h.cards, c);
+   
+    append(&h^, c);
 }
 
-removeCardFromHand :: proc(h: ^Hand, index: int) -> Card 
+removeCardFromHand :: proc(h: ^[dynamic]Card, index: int) -> Card 
 {
-    if index < 0 || index >= len(h.cards) 
+    if index < 0 || index >= len(h) 
     {
         panic("Index out of bounds");
     }
-    c := h.cards[index];
-    ordered_remove(&h.cards, index);
-    // temp := h;
-    // temp2 : [dynamic]Card;
-    // h.cards = temp2
-    // append(&h.cards, temp.cards[0:index]);
-    // append(&h.cards, temp.cards[index+1:]);
+    c := h[index];
+    ordered_remove(&h^, index);
     return c;
+}
+
+shuffleDeck :: proc(d: ^[]Card) 
+{
+    for i := len(d) - 1; i > 0; i -= 1 
+    {
+        j := rand.int31_max(i32(i+1)); // Random index from 0 to i
+        // Swap cards
+        temp := d[i];
+        d[i] = d[j];
+        d[j] = temp;
+    }
+    
 }
