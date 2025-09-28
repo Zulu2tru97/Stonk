@@ -35,6 +35,7 @@ Card :: struct
 }
 
 
+
 setCardFace :: proc(c: ^Card) 
 {
     //Odin only allows compile-time string concatenation for constants. For runtime values (enum -> string) you must use runtime APIs. strings.join is a core:strings API and was the user's requested library.
@@ -87,4 +88,93 @@ suit_to_str :: proc(s: Suit) -> string
         case Suit.Spades:   return "S"
     }
     return "?"
+}
+
+Deck :: struct 
+{
+    cards: [52]Card,
+    top: int,
+}
+
+JokerDeck :: struct 
+{
+    d : Deck,
+    cards: [54]Card,
+}
+
+initDeck :: proc() -> Deck 
+{
+    d: Deck;
+    index := 0;
+    for s in Suit 
+    {
+        for r in Rank 
+        {
+            d.cards[index].suit = s;
+            d.cards[index].rank = r;
+            setCardFace(&d.cards[index]);
+            index += 1;
+        }
+    }
+    d.top = 0;
+    return d;
+}
+
+initJokerDeck :: proc() -> JokerDeck 
+{
+    d: JokerDeck.d = initDeck();
+    // Add two jokers
+    d.cards[52].rank = Rank.Ace;  // Arbitrary rank for joker
+    d.cards[52].suit = Suit.Spades; // Arbitrary suit for joker
+    setJokerCardFace(&d.cards[52], 1); // 1 for red joker
+    
+    d.cards[53].rank = Rank.Ace;  // Arbitrary rank for joker
+    d.cards[53].suit = Suit.Hearts; // Arbitrary suit for joker
+    setJokerCardFace(&d.cards[53], 2); // 2 for black joker
+    
+    d.top = 0;
+    return d;
+}
+
+setJokerCardFace :: proc(c: ^Card, jokerType: int) 
+{
+    if jokerType == 1 
+    {
+        c.face = "../../assets/PlayingCards/PNG/RJ.png";
+    } 
+    else 
+    {
+        c.face = "../../assets/PlayingCards/PNG/BJ.png";
+    }
+}
+
+printCard :: proc(c: Card) 
+{
+    fmt.println("Card: ", rank_to_str(c.rank), " of ", suit_to_str(c.suit));
+}
+
+Hand :: struct 
+{
+    cards: [dynamic]Card,
+}
+
+addCardToHand :: proc(h: ^Hand, c: Card) 
+{
+    append(&h.cards, c);
+}
+
+removeCardFromHand :: proc(h: ^Hand, index: int) -> Card 
+{
+    if index < 0 || index >= len(h.cards) 
+    {
+        panic("Index out of bounds");
+    }
+    c := h.cards[index];
+    ordered_remove(&h.cards, index);
+    // temp := h;
+    // temp2 : [dynamic]Card;
+    // h.cards = temp2
+    // append(&h.cards, temp.cards[0:index]);
+    // append(&h.cards, temp.cards[index+1:]);
+    return c;
 }
