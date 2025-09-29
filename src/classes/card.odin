@@ -161,13 +161,13 @@ Hand :: struct
     cards: [dynamic]Card,
 }
 
-addCardToHand :: proc(h: ^[dynamic]Card, c: Card) 
+addCard :: proc(h: ^[dynamic]Card, c: Card) 
 {
    
     append(&h^, c);
 }
 
-removeCardFromHand :: proc(h: ^[dynamic]Card, index: int) -> Card 
+removeCard :: proc(h: ^[dynamic]Card, index: int) -> Card 
 {
     if index < 0 || index >= len(h) 
     {
