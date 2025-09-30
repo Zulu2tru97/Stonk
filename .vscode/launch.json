@@ -6,11 +6,12 @@
     "configurations": [
         {
             "name": "Debug",
-            "type": "gdb",
+            "type": "cppvsdbg",
             "request": "launch",
-            "target": "./bin/executable",
-            "cwd": "${workspaceRoot}",
-            "valuesFormatting": "parseText"
+            "program": "${workspaceFolder}/src/main/main.exe",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+            
         }
     ]
 }

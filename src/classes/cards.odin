@@ -138,11 +138,9 @@ initJokerDeck :: proc() -> JokerDeck
 {
     d : JokerDeck;
     d.d = initDeck();
-    for i := 0; i < 52; i += 1 
-    {
-        d.cards[i] = d.d.cards[i];
-    }
-    // Add two jokers
+
+    for i := 0; i < 52; i += 1 {d.cards[i] = d.d.cards[i];}
+
     d.cards[52].rank = Rank.Ace;  // Arbitrary rank for joker
     d.cards[52].suit = Suit.Spades; // Arbitrary suit for joker
     setJokerCardFace(&d.cards[52], 1); // 1 for red joker
@@ -157,14 +155,8 @@ initJokerDeck :: proc() -> JokerDeck
 
 setJokerCardFace :: proc(c: ^Card, jokerType: int) 
 {
-    if jokerType == 1 
-    {
-        c.face = "../../assets/PlayingCards/PNG/RJ.png";
-    } 
-    else 
-    {
-        c.face = "../../assets/PlayingCards/PNG/BJ.png";
-    }
+    if jokerType == 1 {c.face = "../../assets/PlayingCards/PNG/RJ.png";} 
+    else {c.face = "../../assets/PlayingCards/PNG/BJ.png";}
 }
 
 printCard :: proc(c: Card) 
@@ -172,18 +164,11 @@ printCard :: proc(c: Card)
     fmt.println("Card: ", rank_to_str(c.rank), " of ", suit_to_str(c.suit));
 }
 
-addCard :: proc(h: ^Hand, c: Card) 
-{
-    
-    append(&h.cards, c);
-}
+addCard :: proc(h: ^Hand, c: Card) {append(&h.cards, c); h.size += 1;  }
 
 removeCard :: proc(h: ^Hand, index: int) -> Card 
 {
-    if index < 0 || index >= len(h.cards) 
-    {
-        panic("Index out of bounds");
-    }
+    if index < 0 || index >= len(h.cards) {panic("Index out of bounds");}
     c := h.cards[index];
     ordered_remove(&h.cards, index);
     return c;
@@ -217,14 +202,12 @@ shuffleJokerDeck :: proc(d: ^JokerDeck)
 
 sortHand :: proc(h: ^[dynamic]Card) 
 {
-    
     n := len(h^);
     for i := 0; i < n-1; i += 1 
     {
         for j := 0; j < n-i-1; j += 1 
         {
-            if  (h^[j].suit > h^[j+1].suit) || 
-                (h^[j].suit == h^[j+1].suit && h^[j].rank > h^[j+1].rank) 
+            if ((h^[j].suit > h^[j+1].suit) || (h^[j].suit == h^[j+1].suit && h^[j].rank > h^[j+1].rank)) 
             {
                 // Swap
                 temp := h^[j];
@@ -255,10 +238,7 @@ deal :: proc(d: ^Deck, hands: ^[]Hand, numCards: int) -> bool
 
 drawCard :: proc(d: ^Deck , h: ^Hand)
 {
-    if d.top >= len(d.cards) 
-    {
-        fmt.println("no more cards")
-    }
+    if d.top >= len(d.cards) {fmt.println("no more cards")}
     c := d.cards[d.top];
     d.top += 1;
     addCard(h,c);

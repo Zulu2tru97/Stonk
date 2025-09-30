@@ -1,10 +1,7 @@
 package main
 import  fmt "core:fmt"
 import rl "vendor:raylib"
-
-// Make sure the card module exists at the specified path or update the path accordingly
 import cards "../classes"
-
 
 main :: proc()
 {
@@ -28,7 +25,6 @@ main :: proc()
     pos := [2]f32{(800 - f32(cardTexture.width)*scale) / 2,(600 - f32(cardTexture.height)*scale) / 2} ;
 
     i : i32 = 0
-    // Main game loop
     for (!rl.WindowShouldClose()) 
     {
         rl.BeginDrawing();
@@ -52,29 +48,25 @@ main :: proc()
             cardTexture = rl.LoadTexture(myDeck.cards[i].face);
 
             fmt.println("S Pressed ", i+1);
-            cards.printCard(myDeck.cards[i]);
-            
+            cards.printCard(myDeck.cards[i]);        
         }
 
         if rl.IsKeyPressed(.RIGHT)
         {
             if i < 51 {i += 1;} else {i = 0;}
-
-            temp := pos[0]
-            pos[0] += f32(cardTexture.width)*scale
-            
-            
-            cardTexture2 = rl.LoadTexture(myDeck.cards[i+3].face)
-
-            rl.DrawTextureEx(cardTexture2, pos ,rotation,scale, rl.WHITE);
-            pos[0] = temp
+            j := (i+3)%52
+            cardTexture2 = rl.LoadTexture(myDeck.cards[j].face)
         }
 
         rl.DrawTextureEx(cardTexture, pos ,rotation,scale, rl.WHITE);
-        rl.DrawText("Press W to rotate and change card", 10, 10, 20, rl.DARKGRAY);
-        
-        rl.EndDrawing();
 
+        temp := pos[0]
+        pos[0] += f32(cardTexture.width)*scale
+        rl.DrawTextureEx(cardTexture2, pos ,rotation,scale, rl.WHITE);
+        pos[0] = temp
+
+        rl.DrawText("Press W to rotate and change card", 10, 10, 20, rl.DARKGRAY);    
+        rl.EndDrawing();
     }
 
     defer rl.UnloadTexture(cardTexture)
