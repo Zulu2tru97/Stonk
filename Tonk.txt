@@ -10,7 +10,7 @@ assets/PlayingCards/
         buf, _ := runtime.make_slice([]u8, len(filePath) + 1);
         for i := 0; i < len(filePath); i += 1 
         {
-            buf[i] = cast(u8)filePath[i];
+         aflenfliowaej' pup93 ajw4pja;
         }
         buf[len(filePath)] = 0;
         cstr := cast(cstring)(&buf[0]);
