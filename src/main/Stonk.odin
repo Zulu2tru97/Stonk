@@ -6,8 +6,9 @@ import c "core:c"
 
 main :: proc()
 {
+    WindowGirth, WindowHeight :: 1600, 900
     fmt.println("Stonk Card Game - Odin Edition")
-    rl.InitWindow(1600, 900, "Stonk Card Game - Odin Edition");
+    rl.InitWindow(WindowGirth, WindowHeight, "Stonk Card Game - Odin Edition");
     defer rl.CloseWindow();
     
     
@@ -20,6 +21,11 @@ main :: proc()
     sheetCols, sheetRows : c.int = 14, 4; // 14 columns and 4 rows in the sprite sheet
     width := f32(cardSheet.width) /f32(sheetCols)
     height := f32(cardSheet.height) / f32(sheetRows);
+
+    rotation, scale : f32 = 0.0, 5;
+    // pos : rl.Vector2 
+    destinationRec := rl.Rectangle{WindowGirth/2, WindowHeight/2, f32(width*scale), f32(-height*scale)}
+    origin := rl.Vector2{f32(width*scale/2), f32(height*scale/2)}
 
     myCard := myDeck.cards[0]
 
@@ -34,8 +40,7 @@ main :: proc()
 
 
 
-    rotation, scale : f32 = 0.0, 1;
-    pos : rl.Vector2 
+    
 
     i : i32 = 0
     for (!rl.WindowShouldClose()) 
@@ -73,13 +78,18 @@ main :: proc()
         rl.DrawTexture(cardSheet, 0,0, rl.WHITE);
         cardFace := myDeck.cards[i].face
 
-        sourceRecforSinglecard := rl.Rectangle{cardFace[0]*width, cardFace[1]*height, width *scale, height *scale};
+        sourceRecforSinglecard := rl.Rectangle{cardFace[0]*width, cardFace[1]*height, width, height};
+        // destinationRec := rl.Rectangle{800, 450, f32(width*scale), f32(-height*scale)}
+        // origin := rl.Vector2{f32(width*scale/2), f32(height*scale/2)}
         // fmt.println(cardFace[0]*width)
         // fmt.println(cardFace[1]*height)
         
         // rl.DrawText(cards.toString(&myDeck.cards[i]), 10, 10, 20, rl.DARKGRAY);
         // cards.printCard(myDeck.cards[i])
-        rl.DrawTexturePro(cardSheet, sourceRecforSinglecard, rl.Rectangle{800, 450, f32(width*scale), f32(-height*scale)}, rl.Vector2{f32(width*scale/2), f32(height*scale/2)}, rotation, rl.WHITE);
+        rl.DrawTexturePro(cardSheet, sourceRecforSinglecard, destinationRec, origin, rotation, rl.WHITE);
+        rl.DrawLine(i32(destinationRec.x), 0, i32(destinationRec.x), WindowHeight, rl.GRAY);
+        rl.DrawLine(0,i32(destinationRec.y), WindowGirth,i32(destinationRec.y), rl.GRAY);
+
         
 
         
